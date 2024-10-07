@@ -1,14 +1,20 @@
 import { Card } from "primereact/card";
 import AddSynonym from "../add-synonym/AddSynonym";
-import LookupSynonym from "../search-synonyms/SearchSynonym";
+import SearchSynonym from "../search-synonyms/SearchSynonym";
 
 export const Parent = () => {
   return (
-    <Card title="Synonym Search Tool" className="col-12 m-4">
-      <div className="grid">
-        <AddSynonym />
-        <LookupSynonym />
-      </div>
-    </Card>
+    <div className="grid m-4">
+      <Card
+        title="Synonym Search Tool"
+        className="col-12 text-center text-white"
+        style={{ backgroundColor: "#1976D2" }}
+      >
+        <div className="grid justify-content-around">
+          <AddSynonym />
+          <SearchSynonym />
+        </div>
+      </Card>
+    </div>
   );
 };

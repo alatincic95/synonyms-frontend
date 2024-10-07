@@ -14,10 +14,13 @@ const AddSynonym: React.FC = () => {
   const { synonyms, setSynonyms, handleSubmit, toastRef } = useAddSynonym();
 
   return (
-    <div className=" justify-content-center align-items-center  xl:col-6 lg:col-6 sm:col-12 col-12">
+    <div className=" justify-content-center align-items-center  xl:col-4 lg:col-4 md:col-6 sm:col-12 col-12">
       <Toast ref={toastRef} />
-      <div className="surface-card p-4 border-round shadow-2">
-        <h2 className="text-center">Add Synonyms</h2>
+      <div
+        style={{ backgroundColor: "#37a1f4" }}
+        className="p-4 border-round shadow-2"
+      >
+        <h2 className="text-center text-white">Add Synonyms</h2>
         <Formik
           initialValues={{ word: "", synonyms: "" }}
           onSubmit={handleSubmit}
@@ -26,6 +29,7 @@ const AddSynonym: React.FC = () => {
             <AddSynonymFormContent
               synonyms={synonyms}
               setSynonyms={setSynonyms}
+              toastRef={toastRef}
             />
           )}
         </Formik>

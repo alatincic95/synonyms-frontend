@@ -7,7 +7,6 @@ const useAddSynonym = () => {
   const toastRef = React.useRef<Toast | null>(null);
 
   const [synonyms, setSynonyms] = useState<string[]>([]);
-  const fetchData = async () => {};
 
   const handleSubmit = async (
     values: { word: string; synonyms: string },
@@ -16,7 +15,7 @@ const useAddSynonym = () => {
     try {
       await axios.post("http://localhost:8080/api/synonyms/add", {
         word: values.word,
-        synonyms: values.synonyms.split(",").map((s) => s.trim()),
+        synonyms: synonyms,
       });
       toastRef.current?.show({
         severity: "success",
@@ -37,7 +36,7 @@ const useAddSynonym = () => {
     }
   };
 
-  return { fetchData, synonyms, setSynonyms, handleSubmit, toastRef };
+  return { synonyms, setSynonyms, handleSubmit, toastRef };
 };
 
 export default useAddSynonym;
