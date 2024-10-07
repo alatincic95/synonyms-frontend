@@ -8,11 +8,14 @@ import React from "react";
 export const AddSynonymFormContent = ({
   synonyms,
   setSynonyms,
-  toastRef,
+  addSynonym,
+  isAddSynonymLoading,
 }: {
   synonyms: string[];
   setSynonyms: React.Dispatch<React.SetStateAction<string[]>>;
-  toastRef: React.MutableRefObject<Toast | null>;
+  toastRef?: React.MutableRefObject<Toast | null>;
+  addSynonym: (values: any, synonyms: string[], setFieldValue: any) => void;
+  isAddSynonymLoading: boolean;
 }) => {
   const { values, setFieldValue }: any = useFormikContext();
 
@@ -34,7 +37,16 @@ export const AddSynonymFormContent = ({
         </label>
         <Field name="synonyms">
           {({ field }: { field: any }) => (
-            <InputText id="synonyms" {...field} />
+            <InputText
+              id="synonyms"
+              {...field}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault(); // Prevent form submission
+                  addSynonym(values, synonyms, setFieldValue);
+                }
+              }}
+            />
           )}
         </Field>
       </div>
@@ -44,22 +56,7 @@ export const AddSynonymFormContent = ({
           label="Add Synonym"
           className="blue-background text-white border-none xl:col-6 lg:col-6 md:col-6 sm:col-12"
           onClick={() => {
-            if (values.synonyms !== "" && values.synonyms !== null) {
-              // Check if the synonym is already in the list
-              if (!synonyms.includes(values.synonyms.trim())) {
-                setSynonyms([...synonyms, values.synonyms.trim()]);
-              } else {
-                // Optionally, you can show a toast message indicating it's a duplicate
-                toastRef.current?.show({
-                  severity: "warn",
-                  summary: "Warning",
-                  detail: "Synonym already exists!",
-                  life: 3000,
-                });
-              }
-              // Clear the input field
-              setFieldValue("synonyms", "");
-            }
+            addSynonym(values, synonyms, setFieldValue);
           }}
         />
       </div>
@@ -80,7 +77,11 @@ export const AddSynonymFormContent = ({
           })}
       </div>
 
-      <Button label="Submit" className="p-button-success border-none mt-3" />
+      <Button
+        label="Submit"
+        loading={isAddSynonymLoading}
+        className="p-button-success border-none mt-3"
+      />
     </Form>
   );
 };

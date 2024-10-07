@@ -6,19 +6,32 @@ import { useState } from "react";
 export const useSearchSynonym = () => {
   const toastRef = useRef<Toast | null>(null);
   const [synonyms, setSynonyms] = useState<string[]>([]);
+  const [isSearchSynonymLoading, setIsSearchSynonymLoading] =
+    useState<boolean>(false);
 
   const handleLookup = async (values: { word: string }) => {
+    setIsSearchSynonymLoading(true);
     try {
-      const response = await axios.get(
-        `http://localhost:8080/api/synonyms/lookup/${values.word}`
+      const response: any = await axios.get(
+        `https://reeinvent-synonyms-4408f50df2a6.herokuapp.com/api/synonyms/lookup/${values.word}`
       );
-      setSynonyms(response.data);
+      if (response.data.includes(values.word)) {
+        setSynonyms(
+          response.data.filter((synonym: string) => synonym !== values.word)
+        );
+      } else {
+        setSynonyms(response.data);
+      }
+
       toastRef.current?.show({
         severity: "success",
         detail: `Synonyms for "${values.word}" retrieved successfully!`,
         life: 3000,
       });
+      setIsSearchSynonymLoading(false);
     } catch (error: any) {
+      setIsSearchSynonymLoading(false);
+
       if (error.status === 404) {
         toastRef.current?.show({
           severity: "info",
@@ -35,5 +48,11 @@ export const useSearchSynonym = () => {
     }
   };
 
-  return { synonyms, handleLookup, toastRef };
+  return {
+    synonyms,
+    handleLookup,
+    toastRef,
+    setSynonyms,
+    isSearchSynonymLoading,
+  };
 };
